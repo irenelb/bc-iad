@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: s3cret
+    volumes:
+      - mongo:/data/db
+    ports:
+      - 27017:27017
+
+  mongo-client:
+    image: mongoclient/mongoclient
+    environment:
+      MONGO_URL: mongodb://root:s3cret@mongo:27017/test?authSource=admin&useUnifiedTopology=true&useNewUrlParser=true
+    ports:
+      - 3005:3000
+    depends_on:
+      - mongo
+
+volumes:
+  mongo:
