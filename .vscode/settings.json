@@ -1,6 +1,6 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-  "window.title": "service-to-monitor${separator}${dirty}${activeEditorShort}${separator}${appName}",
+  "window.title": "bc-iad${separator}${dirty}${activeEditorShort}${separator}${appName}",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
