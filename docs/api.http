@@ -5,11 +5,15 @@
 GET {{uri}}/transactions
 
 ###
+# @name Metrics
+GET {{uri}}/metrics 
+
+###
 # @name TransactionList
 POST {{uri}}/transactions
 Content-Type: application/json
 
 {
     "amount":1200,
-    "type":"bonifico"
+    "type":"prelievo"
 }

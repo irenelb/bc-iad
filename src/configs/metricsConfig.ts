@@ -1,8 +1,13 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import client, { Counter } from 'prom-client';
 import { options } from './options.js';
+declare module 'http' {
+  interface IncomingMessage {
+    metrics: ReturnType<typeof metricsConf.collectMetrics>;
+  }
+}
 
-export function metrics() {
+function metrics() {
   const collectDefaultMetrics = client.collectDefaultMetrics;
 
   const register = new client.Registry();
@@ -11,9 +16,32 @@ export function metrics() {
     totalRequests: new Counter({
       name: 'requests_total',
       help: 'Number of requests in total',
+      labelNames: ['type'],
+      registers: [register],
+    }),
+    totalFailedTransaction: new Counter({
+      name: 'failed_transactions_total',
+      help: 'Number of failed transaction in total',
+      labelNames: ['type'],
+      registers: [register],
+    }),
+    responseTime: new client.Histogram({
+      name: 'transaction_response_time',
+      help: 'how long it takes to execute a transaction',
+      buckets: [0.5, 5, 15, 30, 60, 90],
+      labelNames: ['type'],
       registers: [register],
     }),
   };
+
+  function metricsInjectorMiddleware(
+    req: Request,
+    _: Response,
+    next: NextFunction
+  ) {
+    req.metrics = configMetrics;
+    next();
+  }
 
   async function monitoringMiddleware(_: Request, res: Response) {
     try {
@@ -27,7 +55,11 @@ export function metrics() {
   function collectMetrics() {
     return configMetrics;
   }
-  return { monitoringMiddleware, collectMetrics };
+  return {
+    monitoringMiddleware,
+    collectMetrics,
+    metricsInjectorMiddleware,
+  };
 }
 
-export default metrics();
+export const metricsConf = metrics();
