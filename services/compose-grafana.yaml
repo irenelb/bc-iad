@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+
+  grafana:
+    image: grafana/grafana-oss
+    ports:
+      - 4000:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - type: bind
+        source: ./configs/prometheus_ds.yml
+        target: /etc/grafana/provisioning/datasources/prometheus_ds.yml
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=s3cret
+      - GF_SECURITY_ADMIN_USER=admin
+volumes:
+  grafana-data:

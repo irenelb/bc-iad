@@ -1,0 +1,25 @@
+version: '3.6'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9000:9090
+    volumes:
+      - ./configs/configs.yaml/:/etc/prometheus/configs.yaml
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/configs.yaml
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+volumes:
+  prometheus-data:
