@@ -1,4 +1,4 @@
-@uri=http://localhost:4000
+@uri=http://localhost:3000
 
 ###
 # @name TransactionList
@@ -15,5 +15,9 @@ Content-Type: application/json
 
 {
     "amount":1200,
-    "type":"prelievo"
+    "type":"bonifico"
 }
+
+###
+# @name Metrics
+GET {{uri}}/healthcheck 

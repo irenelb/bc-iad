@@ -17,7 +17,11 @@ router
     validateReqMiddleware(
       Type.Object(
         {
-          type: Type.String({ enum: ['prelievo', 'bonifico', 'investimento'] }),
+          type: Type.Union([
+            Type.Literal('prelievo'),
+            Type.Literal('bonifico'),
+            Type.Literal('investimento'),
+          ]),
           amount: Type.Number(),
         },
         { additionalProperties: false }
