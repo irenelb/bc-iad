@@ -6,11 +6,11 @@ scrape_configs:
   - job_name: prometheus
     static_configs:
       - targets:
-          - "prometheus:9090"
-  - job_name: "bc-iad"
+          - 'prometheus:9090'
+  - job_name: 'bc-iad'
     metrics_path: /metrics
     static_configs:
-      - targets: ["172.18.0.1:3000"]
-  - job_name: "cadvisor"
+      - targets: ['bc-iad:3000']
+  - job_name: 'cadvisor'
     static_configs:
-      - targets: ["cadvisor:8080"]
+      - targets: ['cadvisor:8080']

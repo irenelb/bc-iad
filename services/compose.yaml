@@ -1,0 +1,21 @@
+services:
+  bc-iad:
+    build: ../.
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - DB_CONNECTION_URL=mongodb://root:s3cret@mongo:27017/test?authSource=admin&useUnifiedTopology=true&useNewUrlParser=true
+    ports:
+      - 3000:3000
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:3000/healthcheck"
+        ]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
