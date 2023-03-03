@@ -1,9 +1,9 @@
 #!/usr/bin/env zx
-import { nanoid } from 'nanoid';
-import 'zx/globals';
 import { spinner } from 'zx/experimental';
+import prettyMilliseconds from 'pretty-ms';
+import 'zx/globals';
 const {
-  url = 'http://localhost:3000/receiver/_send',
+  url = 'http://localhost:3000',
   times = 10,
   ms = 3000,
   debug = false,
@@ -14,43 +14,60 @@ $.verbose = false;
 if (debug) await spinner('wait 5 seconds', () => $`sleep 5`);
 
 setInterval(async () => {
-  const startAt = process.hrtime();
+  const startAt = performance.now();
   const results = await Promise.allSettled(
-    Array.from({ length: times }, callReceiver)
+    Array.from({ length: times }, callEndpoint)
   );
-  const diff = process.hrtime(startAt);
-  echo(chalk.red(`${(diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2)}ms`));
+  const endAt = performance.now();
+  const diff = endAt - startAt;
+  echo(chalk.red(`${prettyMilliseconds(diff)}`));
 
-  results.forEach(r => echo(YAML.stringify(r)));
+  results.forEach((r) => echo(YAML.stringify(r)));
 }, ms);
 
-function callReceiver() {
+function callEndpoint() {
   return new Promise(async (resolve, reject) => {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-request-id': nanoid(),
-      },
-      body: JSON.stringify({
-        id: nanoid(),
-        data: 5,
-      }),
-    });
-    if (res.status >= 400) {
-      reject({
-        response: await res.json(),
-        'x-header': [...res.headers].find(
-          ([head]) => head === 'x-request-time'
-        )[1],
+    const body = buildBody();
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body,
       });
-    } else {
-      resolve({
-        response: await res.json(),
-        'x-header': [...res.headers].find(
-          ([head]) => head === 'x-request-time'
-        )[1],
-      });
+      if (res.status) {
+        resolve({ status: res.status, ...JSON.parse(body) });
+      }
+    } catch (error) {
+      reject(error);
     }
   });
+}
+
+function buildBody() {
+  const transactionsType = ['bonifico', 'prelievo', 'investimento'];
+  const randomType =
+    transactionsType[Math.floor(Math.random() * transactionsType.length)];
+  let max = 0;
+  switch (randomType) {
+    case transactionsType[0]:
+      max = 10000;
+      break;
+    case transactionsType[1]:
+      max = 1000;
+      break;
+    case transactionsType[2]:
+      max = 1000000;
+      break;
+
+    default:
+      break;
+  }
+  const body = {
+    amount: Math.floor(Math.random() * max) + 1,
+    type: randomType,
+  };
+
+  return JSON.stringify(body);
 }

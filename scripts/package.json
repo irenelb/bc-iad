@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "nanoid": "^4.0.0",
-    "zx": "^7.1.1"
+    "pretty-ms": "^8.0.0",
+    "zx": "^7.2.0"
   }
 }
