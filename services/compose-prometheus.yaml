@@ -28,9 +28,6 @@ services:
     command: --config.file=/config/blackbox.yml --log.level=debug
     ports:
       - 9115:9115
-  bb:
-    image: alpine
-    entrypoint: ['sleep', 'infinity']
 
 volumes:
   prometheus-data:

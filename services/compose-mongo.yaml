@@ -19,5 +19,10 @@ services:
       - 3005:3000
     depends_on:
       - mongo
+
+  mongo-exporter:
+    image: bitnami/mongodb-exporter
+    environment:
+      - MONGODB_URL=mongodb://root:s3cret@mongo:27017/test?authSource=admin&useUnifiedTopology=true&useNewUrlParser=true
 volumes:
   mongo:
