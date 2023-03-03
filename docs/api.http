@@ -19,5 +19,5 @@ Content-Type: application/json
 }
 
 ###
-# @name Metrics
+# @name Healthcheck
 GET {{uri}}/healthcheck 

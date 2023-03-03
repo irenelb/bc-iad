@@ -21,5 +21,16 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
 
+  blackbox:
+    image: quay.io/prometheus/blackbox-exporter:v0.23.0
+    volumes:
+      - ./configs/blackbox.yaml:/config/blackbox.yml
+    command: --config.file=/config/blackbox.yml --log.level=debug
+    ports:
+      - 9115:9115
+  bb:
+    image: alpine
+    entrypoint: ['sleep', 'infinity']
+
 volumes:
   prometheus-data:
