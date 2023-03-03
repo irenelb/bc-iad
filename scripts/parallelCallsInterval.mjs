@@ -14,6 +14,7 @@ $.verbose = false;
 if (debug) await spinner('wait 5 seconds', () => $`sleep 5`);
 
 setInterval(async () => {
+  echo('call interval, starting...');
   const startAt = performance.now();
   const results = await Promise.allSettled(
     Array.from({ length: times }, callEndpoint)

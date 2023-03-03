@@ -11,22 +11,27 @@ function metrics() {
   const collectDefaultMetrics = client.collectDefaultMetrics;
 
   const register = new client.Registry();
-  collectDefaultMetrics({ register, labels: { appName: options.appName } });
+  const prefix = `${options.appName}_`;
+  collectDefaultMetrics({
+    prefix,
+    register,
+    labels: { appName: options.appName },
+  });
   const configMetrics = {
     totalRequests: new Counter({
-      name: 'requests_total',
+      name: `${prefix}requests_total`,
       help: 'Number of requests in total',
       labelNames: ['type'],
       registers: [register],
     }),
     totalFailedTransaction: new Counter({
-      name: 'failed_transactions_total',
+      name: `${prefix}failed_transactions_total`,
       help: 'Number of failed transaction in total',
       labelNames: ['type'],
       registers: [register],
     }),
     responseTime: new client.Histogram({
-      name: 'transaction_response_time',
+      name: `${prefix}transaction_response_time`,
       help: 'how long it takes to execute a transaction',
       buckets: [0.5, 5, 15, 30, 60, 90],
       labelNames: ['type'],
