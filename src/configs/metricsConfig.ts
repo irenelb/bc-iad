@@ -31,9 +31,15 @@ function metrics() {
       registers: [register],
     }),
     responseTime: new client.Histogram({
-      name: `${prefix}transaction_response_time`,
+      name: `${prefix}transaction_response_time_seconds`,
       help: 'how long it takes to execute a transaction',
-      buckets: [0.5, 5, 15, 30, 60, 90],
+      buckets: [0.5, 5, 15, 30, 60, 90], //secondi
+      labelNames: ['type'],
+      registers: [register],
+    }),
+    capitalMovement: new client.Gauge({
+      name: `${prefix}capital_movement`,
+      help: 'amount of capital movement',
       labelNames: ['type'],
       registers: [register],
     }),

@@ -32,9 +32,8 @@ router
     const { amount, type } = req.body as Transaction;
     const responseTimeHistogram = req.metrics.responseTime;
     req.metrics.totalRequests.labels({ type }).inc();
-    responseTimeHistogram.zero({ type });
     const fakeBalance = getRandomInt(0, amount * 2);
-    const end = responseTimeHistogram.startTimer();
+    const end = responseTimeHistogram.labels({ type }).startTimer();
     let seconds = 0;
     switch (type) {
       case 'bonifico':
@@ -51,6 +50,7 @@ router
 
     if (fakeBalance < amount) {
       end();
+      req.metrics.capitalMovement.labels({ type }).set(amount);
       req.metrics.totalFailedTransaction.labels({ type }).inc();
       res
         .status(httpStatus.INTERNAL_SERVER_ERROR)
