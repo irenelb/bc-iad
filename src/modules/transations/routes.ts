@@ -31,7 +31,7 @@ router
   .post('/', async (req, res) => {
     const { amount, type } = req.body as Transaction;
     const responseTimeHistogram = req.metrics.responseTime;
-    req.metrics.totalRequests.labels({ type }).inc();
+    req.metrics.totalTransaction.labels({ type }).inc();
     const fakeBalance = getRandomInt(0, amount * 2);
     const end = responseTimeHistogram.labels({ type }).startTimer();
     let seconds = 0;

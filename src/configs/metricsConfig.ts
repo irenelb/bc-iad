@@ -18,9 +18,9 @@ function metrics() {
     labels: { appName: options.appName },
   });
   const configMetrics = {
-    totalRequests: new Counter({
-      name: `${prefix}requests_total`,
-      help: 'Number of requests in total',
+    totalTransaction: new Counter({
+      name: `${prefix}transactions_total`,
+      help: 'Number of new transactions in total',
       labelNames: ['type'],
       registers: [register],
     }),
