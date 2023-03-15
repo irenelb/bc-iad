@@ -19,7 +19,7 @@ docker compose -f ./services/compose.yaml -f ./services/compose-grafana.yaml -f 
 se si desidera fare modifiche al progetto e si vuole buildare il repo corrente per aggiornare l'immagine aggiungere l'opzione `--build` nel seguente modo:
 
 ```sh
-docker compose -f ./services/compose.yaml -f ./services/compose-grafana.yaml -f ./services/compose-mongo.yaml -f ./services/compose-prometheus.yaml up --buil -d
+docker compose -f ./services/compose.yaml -f ./services/compose-grafana.yaml -f ./services/compose-mongo.yaml -f ./services/compose-prometheus.yaml up --build -d
 ```
 
 Tutti i file compose dove vengono definiti i container si trovano sotto la cartella `/services` e le configurazioni di prometheus e grafana sono sotto `/services/configs`.
